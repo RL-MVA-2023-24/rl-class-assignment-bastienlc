@@ -8,9 +8,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import MultiplicativeLR, SequentialLR
-from training_env import evaluate_agent, init, step
 
 from interface import Agent
+from training_env import evaluate_agent, init, step
 
 
 class ReplayBuffer:
@@ -101,7 +101,7 @@ class ReplayBuffer:
 
 def greedy_action(network, state):
     network.eval()
-    device = "cuda" if next(network.parameters()).is_cuda else "cpu"
+    device = "cpu"
     with torch.no_grad():
         Q = network(torch.Tensor(state).unsqueeze(0).to(device))
         return torch.argmax(Q).item()
@@ -180,7 +180,7 @@ class DQN(Agent):
         self.domain_randomization = domain_randomization
         self.p = p
 
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = "cpu"
 
         self.model = torch.nn.Sequential(
             nn.Linear(self.nb_states, self.hidden_size),
